@@ -1,20 +1,30 @@
 /**
  * Created by jane on 31/07/2017.
- * todo: lodash， test
- * 中缀表达式转换成逆波兰表达式
+ * todo: test
+ * 四则运算中缀表达式转换成逆波兰表达式
  * 1 + 5 * 3 + (6 - 2) / 2 - 4
  * 输入['1', '+', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']
  * 输出[]
  */
-
+const _ = require('lodash')
 
 
 function toPPN(origin) {
     'use strict'
+    if (!_.isArray(origin)) {
+        console.error('非法输入, 请输入格式正确的中缀表达式数组')
+        return []
+    }
     let ppn = [], operator = [];
     // 遍历中缀表达式转换成的数组
     for (let i = 0; i < origin.length; i++) {
         const item = origin[i]
+        // 校验原始输入的元素是否符合要求
+        if (isNaN(item) && (['+', '-', '*', '-', '(', ')']).indexOf(item) < 0){
+            console.error('中缀表达式的组成元素不符合规则, 请检查修正')
+            return []
+        }
+
         // 判断该位置上的元素是否为数字
         if (!isNaN(item)) {
             // 如果是数字， item推入ppn
@@ -30,16 +40,20 @@ function toPPN(origin) {
             // operator弹出'('
             operator.pop()
         } else if (!needPop(item, operator[operator.length - 1])) {
+
             operator.push(item)
         } else {
+            // 比较运算符的优先级, 如果item低于operator栈顶符号优先级, operator弹出尾元素并推入到ppn
             while (operator.length && needPop(item, operator[operator.length - 1])) {
                 ppn.push(operator.pop())
             }
+
             operator.push(item)
         }
     }
 
-    while(operator.length){
+    // 最后, 逐次弹出operator尾元素入栈到ppn
+    while (operator.length) {
         ppn.push(operator.pop())
     }
 
@@ -56,4 +70,4 @@ function needPop(a, b) {
 }
 
 
-console.log(toPPN(['1', '+', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']))
+console.log(toPPN([1, 'sda']))
