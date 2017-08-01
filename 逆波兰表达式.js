@@ -6,12 +6,10 @@
  * 输入['1', '+', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']
  * 输出[]
  */
-const _ = require('lodash')
-
 
 function toPPN(origin) {
     'use strict'
-    if (!_.isArray(origin)) {
+    if (Object.prototype.toString.call(origin) !== '[object Array]') {
         console.error('非法输入, 请输入格式正确的中缀表达式数组')
         return []
     }
