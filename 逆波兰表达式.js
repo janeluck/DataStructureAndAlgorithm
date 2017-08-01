@@ -3,7 +3,7 @@
  * todo: lodash， test
  * 中缀表达式转换成逆波兰表达式
  * 1 + 5 * 3 + (6 - 2) / 2 - 4
- * 输入['1', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']
+ * 输入['1', '+', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']
  * 输出[]
  */
 
@@ -12,7 +12,6 @@
 function toPPN(origin) {
     'use strict'
     let ppn = [], operator = [];
-
     // 遍历中缀表达式转换成的数组
     for (let i = 0; i < origin.length; i++) {
         const item = origin[i]
@@ -30,16 +29,19 @@ function toPPN(origin) {
             } while (operator[operator.length - 1] !== '(')
             // operator弹出'('
             operator.pop()
-        } else if (needPop(item, operator[operator.length - 1])) {
-
-
-
-
+        } else if (!needPop(item, operator[operator.length - 1])) {
+            operator.push(item)
         } else {
+            while (operator.length && needPop(item, operator[operator.length - 1])) {
+                ppn.push(operator.pop())
+            }
             operator.push(item)
         }
     }
 
+    while(operator.length){
+        ppn.push(operator.pop())
+    }
 
     return ppn
 }
@@ -52,3 +54,6 @@ function needPop(a, b) {
     return true
 
 }
+
+
+console.log(toPPN(['1', '+', '5',  '*', '3', '+', '(', '6',  '-',  '2', ')', '/', '2',  '-', '4']))
